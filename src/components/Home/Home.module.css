@@ -69,12 +69,6 @@ button.job {
     color: white;
 }
 
-
-
-input {
-    all: unset;
-}
-
 select {
     background-color: unset;
     font-size: 1rem;

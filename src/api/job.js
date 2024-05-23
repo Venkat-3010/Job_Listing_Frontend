@@ -8,6 +8,7 @@ export const createJobPost = async (jobPostPayload) => {
     axios.defaults.headers.common["Authorization"] = token;
     const response = await axios.post(reqUrl, jobPostPayload);
     console.log(response);
+    alert("job created successfully");
   } catch (err) {
     return err.response.data;
   }
@@ -41,12 +42,22 @@ export const getAllJobs = async (filter) => {
   try {
     const userId = JSON.parse(localStorage.getItem("userId")) || "";
     const reqUrl = `${backendUrl}/all/${userId}?searchQuery=${
-      filter?.title || ""
-    }&skills=${filter?.skills || ""}`;
+        encodeURIComponent(filter.title || "")
+    }&skills=${encodeURIComponent(filter.skills || "")}`;
     const response = await axios.get(reqUrl);
+    console.log(response.data);
     return response.data;
   } catch (err) {
-    console.log(err);
-    alert("Hello there: " + err.message);
+    if (err.response) {
+        console.error("Server responded with an error:", err.response.data);
+        console.error("Status code:", err.response.status);
+        alert(`Error: ${err.response.status} - ${err.response.data.message}`);
+      } else if (err.request) {
+        console.error("No response received:", err.request);
+        alert("Error: No response from server. Please try again later.");
+      } else {
+        console.error("Error in request setup:", err.message);
+        alert(`Error: ${err.message}`);
+      }
   }
 };

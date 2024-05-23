@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { updateJobPostById } from '../../api/job';
+import { updateJobPostById, createJobPost } from '../../api/job';
 import styles from './JobPost.module.css'
 import { DEFAULT_SKILLS } from '../../utils/constant';
 
@@ -10,19 +10,18 @@ const JobPost = () => {
   const navigate = useNavigate();
   const [stateData] = useState(state?.jobDetails);
   const [formData, setFormData] = useState({
-    companyName: "" || stateData?.companyName,
-    logoUrl: "" || stateData?.logoUrl,
-    thisitle: "" || stateData?.title,
-    description: "" || stateData?.description,
-    location: "" || stateData?.location,
-    salary: "" || stateData?.salary,
-    experience: "" || stateData?.experience,
-    duration: "" || stateData?.duration,
-    locationType: "" || stateData?.locationType,
-    skills: stateData?.skills || [],
-    information: "" || stateData?.information,
-    jobType: "" || stateData?.jobType,
-    about: "" || stateData?.about,
+      companyName: "" || stateData?.companyName,
+      logoUrl: "" || stateData?.logoUrl,
+      title: "" || stateData?.title,
+      description: "" || stateData?.description,
+      salary: "" || stateData?.salary,
+      location: "" || stateData?.location,
+      duration: "" || stateData?.duration,
+      locationType: "" || stateData?.locationType,
+      skills: stateData?.skills || [],
+      information: "" || stateData?.information,
+      jobType: "" || stateData?.jobType,
+      about: "" || stateData?.about,
   });
 
   const handleChange = (e) => {
@@ -31,33 +30,33 @@ const JobPost = () => {
 
   const handleSubmit = async () => {
     if(
-        !formData.companyName || 
+        !formData.companyName ||
         !formData.logoUrl ||
-       !formData.title ||
-       !formData.description ||
-       !formData.location ||
-       !formData.salary ||
-       !formData.experience ||
-       !formData.duration ||
-       !formData.locationType ||
-       !formData.skills ||
-       !formData.information ||
-       !formData.jobType 
+        !formData.title ||
+        !formData.salary ||
+        !formData.jobType ||
+        !formData.location ||
+        !formData.description ||
+        !formData.skills ||
+        !formData.information ||
+        !formData.locationType
     ){
         alert("Please fill all the fields");
         return;
     }
 
-    if(state.edit){
+    if(state?.Edit){
         await updateJobPostById(stateData._id, formData);
         return;
     }
 
     const result = await createJobPost(formData);
+    console.log(result);
     if(!result?.isTokenValid){
         localStorage.clear();
         navigate("/login");
     }
+    navigate("/");
   };
 
   const addSkills = (e) => {
@@ -249,22 +248,22 @@ const JobPost = () => {
                         Please select skills
                     </option>
                     {DEFAULT_SKILLS.map((element) => (
-                        <option>{element}</option>
+                        <option key={element}>{element}</option>
                     ))}
                 </select>
             </div>
             <div className={styles.skills}>
-                {formData?.skills?.map((element) => (
-                    <div>
+                {formData?.skills?.map((element, index) => (
+                    <div key={index}>
                         {element}&nbsp;
-                        <button onClick={() => removeSkill(element)}>
+                        <button onClick={() => removeSkills(element)}>
                             X
                         </button>
                     </div>
                 ))}
             </div>
         </div>
-        <button onClick={handleSubmit} className={styles.add}>
+        <button onClick={handleSubmit} style={{cursor: 'pointer'}} className={styles.add}>
             {state?.edit ? "Edit Job" : "+ Add Job "}
         </button>
         <button className={styles.cancel}>Cancel</button>

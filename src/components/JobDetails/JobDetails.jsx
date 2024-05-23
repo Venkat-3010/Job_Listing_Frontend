@@ -8,7 +8,7 @@ const JobDetails = () => {
   const navigate = useNavigate();
 
   const [jobDetails, setJobDetails ] = useState();
-  const [isLooggedIn] = useState(!!localStorage.getItem('token'));
+  const [isLoggedIn] = useState(!!localStorage.getItem('token'));
   const [isEditable, setIsEditable] = useState(false);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const JobDetails = () => {
                         JobFinder
                     </p>
                     <div className={styles.btnGrp}>
-                        {isLooggedIn ? (
+                        {isLoggedIn ? (
                             <button className={styles.register} onClick={logout}>Logout</button>
                         ) : (
                             <>
@@ -56,7 +56,7 @@ const JobDetails = () => {
                         {jobDetails?.companyName}
                     </p>
                 </div>
-                <div className={syles.containerBottom}>
+                <div className={styles.containerBottom}>
                     <div className={styles.preHeading}>
                         <p className={styles.lightText}>
                             {jobDetails?.posted} . {jobDetails.jobType}
