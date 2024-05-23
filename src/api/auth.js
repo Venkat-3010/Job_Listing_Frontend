@@ -1,10 +1,10 @@
 import axios from "axios";
-const backendUrl = `https://job-listing-4ksb.onrender.com/api/v1/auth`;
+const backendUrl = `https://job-listing-4ksb.onrender.com/api/v1`;
 
 export const registerUser = async ({ email, password, mobile, name }) => {
     try { 
         const reqUrl = `${backendUrl}/register`;
-        const response = await axios.post(reqUrl, {
+        await axios.post(reqUrl, {
             email,
             password,
             mobile,

@@ -7,6 +7,7 @@ export const createJobPost = async (jobPostPayload) => {
         const token = JSON.parse(localStorage.getItem("token"));
         axios.defaults.headers.common["Authorization"] = token;
         const response = await axios.post(reqUrl, jobPostPayload);
+        return response.data;
     }catch(err){
         return err.response.data;
     }
