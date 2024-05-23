@@ -8,31 +8,36 @@ import { getAllJobs } from "../../api/job";
 
 const Home = () => {
   const navigate = useNavigate();
+  const [loggedIn, setIsLoggedIn] = useState(false);
   const [jobs, setJobs] = useState([]);
   const [skills, setSkills] = useState([]);
   const [title, setTitle] = useState();
-  const [token] = useState(!!localStorage.getItem("token"));
+  const [token, setToken] = useState(!!localStorage.getItem("token"));
 
   const handleLogout = async () => {
     localStorage.clear();
+    setIsLoggedIn(false);
+    setToken(false);
     navigate("/login");
   };
 
   const fetchAllJobs = async () => {
     const result = await getAllJobs({ title: title, skills: skills });
-    setJobs(result?.data);
+    setJobs(result?.data || []);
   };
 
   const handleSkill = (e) => {
-    const newArr = skills.filter((skill) => skill === e.target.value);
-    if (!newArr.length) {
-      setSkills([...skills, e.target.value]);
-    }
+    const value = e.target.value;
+    setSkills((prevSkills) => {
+      if (!prevSkills.includes(value)) {
+        return [...prevSkills, value];
+      }
+      return prevSkills;
+    });
   };
 
   const removeSkill = (selectedSkill) => {
-    const newArr = skills.filter((skill) => skill !== selectedSkill);
-    setSkills([...newArr]);
+    setSkills((prevSkills) => prevSkills.filter((skill) => skill !== selectedSkill));
   };
 
   const handleLogin = () => {
@@ -42,6 +47,12 @@ const Home = () => {
   const handleRegister = () => {
     navigate("/register");
   }
+
+  useEffect(() => {
+    if(token){
+      setIsLoggedIn(true);
+    }
+  }, [token]);
 
   // useEffect(() => {
   //    fetchAllJobs();
@@ -53,7 +64,7 @@ const Home = () => {
         <h3 onClick={() => navigate('/')} style={{cursor: 'pointer'}}>Jobfinder</h3>
         <div className={styles.btnGroup}>
           {token ? (
-            <button className={styles.login} onClick={handleLogout}>
+            <button className={styles.login} onClick={handleLogout} >
               Logout
             </button>
           ) : (
@@ -107,7 +118,7 @@ const Home = () => {
             );
           })}
           <div>
-            <button onClick={fetchAllJobs} className={styles.filter}>
+            <button onClick={loggedIn ? fetchAllJobs : () => navigate('/login')} className={styles.filter}>
               Apply Filter
             </button>
             <button

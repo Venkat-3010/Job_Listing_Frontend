@@ -32,7 +32,7 @@ const JobDetails = () => {
     <>
         {jobDetails ? (
             <div className={styles.body}>
-                <div className={styles.nav}>
+                <div className={styles.nav} onClick={() => navigate('/')} style={{cursor: 'pointer'}}>
                     <p className={styles.navText}>
                         JobFinder
                     </p>
@@ -79,7 +79,7 @@ const JobDetails = () => {
                             </div>
                         </div>
                         <div>
-                            {isLooggedIn && isEditable && (
+                            {isLoggedIn && isEditable && (
                                 <button onClick={() => {
                                     navigate("/job-post", {
                                         state: {

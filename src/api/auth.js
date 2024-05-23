@@ -10,7 +10,7 @@ export const registerUser = async ({ email, password, mobile, name }) => {
             mobile,
             name,
         });
-        console.log(response);
+        console.log(response.data);
         return;
     } catch (error) {
         console.log(error);
