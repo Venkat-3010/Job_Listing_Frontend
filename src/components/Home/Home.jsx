@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DEFAULT_SKILLS } from "../../utils/constant";
 import { CiSearch } from "react-icons/ci";
 import { MdOutlinePeople } from "react-icons/md";
 import styles from "./Home.module.css";
-import { getAllJobs } from "../../api/job";
+import { getAlljobs, getAlljobsfilter, updateJobPostById } from "../../api/job";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const Home = () => {
   };
 
   const fetchAllJobs = async () => {
-    const result = await getAllJobs({ title: title, skills: skills });
+    const result = await getAlljobsfilter({ title: title, skills: skills });
     setJobs(result?.data || []);
   };
 
@@ -37,40 +37,55 @@ const Home = () => {
   };
 
   const removeSkill = (selectedSkill) => {
-    setSkills((prevSkills) => prevSkills.filter((skill) => skill !== selectedSkill));
+    setSkills((prevSkills) =>
+      prevSkills.filter((skill) => skill !== selectedSkill)
+    );
   };
 
   const handleLogin = () => {
     navigate("/login");
-  }
+  };
 
   const handleRegister = () => {
     navigate("/register");
-  }
+  };
+
+  const fetchJobs = async () => {
+    const response = await getAlljobs();
+    if (response) {
+      setJobs(response.data);
+    }
+  };
 
   useEffect(() => {
-    if(token){
+    if (token) {
       setIsLoggedIn(true);
     }
   }, [token]);
 
-  // useEffect(() => {
-  //    fetchAllJobs();
-  // }, []);
+  useEffect(() => {
+    fetchJobs();
+  }, []);
 
   return (
     <>
       <div className={styles.header}>
-        <h3 onClick={() => navigate('/')} style={{cursor: 'pointer'}}>Jobfinder</h3>
+        <h3 onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
+          Jobfinder
+        </h3>
         <div className={styles.btnGroup}>
           {token ? (
-            <button className={styles.login} onClick={handleLogout} >
+            <button className={styles.login} onClick={handleLogout}>
               Logout
             </button>
           ) : (
             <>
-              <button className={styles.login} onClick={handleLogin}>Login</button>
-              <button className={styles.register} onClick={handleRegister}>Register</button>
+              <button className={styles.login} onClick={handleLogin}>
+                Login
+              </button>
+              <button className={styles.register} onClick={handleRegister}>
+                Register
+              </button>
             </>
           )}
         </div>
@@ -103,22 +118,26 @@ const Home = () => {
               </option>
             ))}
           </select>
-
-          {skills?.map((skill) => {
-            return (
-              <span className={styles.chip} key={skill}>
-                {skill}
-                <span
-                  onClick={() => removeSkill(skill)}
-                  className={styles.cross}
-                >
-                  ╳
+          <div className={styles.chipContainer}>
+            {skills?.map((skill) => {
+              return (
+                <span className={styles.chip} key={skill}>
+                  {skill}
+                  <span
+                    onClick={() => removeSkill(skill)}
+                    className={styles.cross}
+                  >
+                    ╳
+                  </span>
                 </span>
-              </span>
-            );
-          })}
+              );
+            })}
+          </div>
           <div>
-            <button onClick={loggedIn ? fetchAllJobs : () => navigate('/login')} className={styles.filter}>
+            <button
+              onClick={loggedIn ? fetchAllJobs : () => navigate("/login")}
+              className={styles.filter}
+            >
               Apply Filter
             </button>
             <button

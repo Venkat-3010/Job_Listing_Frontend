@@ -33,9 +33,12 @@ const Register = () => {
       return;
     }
 
-    await registerUser(formData);
-    console.log(formData);
-    navigate("/login");
+    const result = await registerUser(formData);
+    if(result){
+      alert("Registration successful! Please login to continue.");
+      navigate("/login");
+      console.log(formData);
+    }
   };
 
   return (

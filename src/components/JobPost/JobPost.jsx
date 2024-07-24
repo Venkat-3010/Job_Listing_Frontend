@@ -47,7 +47,6 @@ const JobPost = () => {
 
     if(state?.Edit){
         await updateJobPostById(stateData._id, formData);
-        return;
     }
 
     const result = await createJobPost(formData);
