@@ -1,6 +1,6 @@
 import axios from "axios";
-const backendUrl = "http://localhost:5000/api/v1/auth"
-// const backendUrl = `https://job-listing-4ksb.onrender.com/api/v1/auth`;
+// const backendUrl = "http://localhost:5000/api/v1/auth"
+const backendUrl = `https://job-listing-4ksb.onrender.com/api/v1/auth`;
 
 export const registerUser = async ({ email, password, mobile, name }) => {
     
